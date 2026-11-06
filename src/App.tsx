@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Bell,
@@ -9,6 +9,7 @@ import {
   Home,
   Gift,
   ChevronRight,
+  ChevronLeft,
   Star,
   Layers,
   Volume2,
@@ -63,10 +64,12 @@ import bombImage from '../assets/images/cards/bomb.png';
 
 export default function App() {
   // Navigation current view state
-  const [view, setView] = useState<GameType>('home');
+  const [view, setViewState] = useState<GameType>('home');
   const [slotsGameId, setSlotsGameId] = useState<SlotGameId>('ras_reckoning');
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const featuredGamesRowRef = useRef<HTMLDivElement>(null);
+  const slotsGamesRowRef = useRef<HTMLDivElement>(null);
 
   // Deposit and Withdraw Sandbox modal states
   const [showBonusModal, setShowBonusModal] = useState<boolean>(false);
@@ -159,6 +162,16 @@ export default function App() {
         return '/404';
       default:
         return '/';
+    }
+  };
+
+  const setView: React.Dispatch<React.SetStateAction<GameType>> = (nextView) => {
+    const next = typeof nextView === 'function' ? nextView(view) : nextView;
+    setViewState(next);
+
+    const nextPath = getPathForView(next);
+    if (window.location.pathname !== nextPath) {
+      window.history.pushState({ view: next }, '', nextPath);
     }
   };
 
@@ -873,7 +886,7 @@ export default function App() {
                           sound.playClick();
                           setView('crash');
                         }}
-                        className="group min-h-[100px] sm:min-h-[112px] border border-purple-500/35 bg-gradient-to-r from-[#3b0764] via-[#581c87] to-[#6d28d9] p-4 rounded-2xl text-left relative overflow-hidden transition-all duration-300 hover:shadow-[0_6px_24px_rgba(168,85,247,0.22)] active:scale-95"
+                        className="group min-h-[90px] sm:min-h-[112px] border border-purple-500/35 bg-gradient-to-r from-[#3b0764] via-[#581c87] to-[#6d28d9] p-3.5 sm:p-4 rounded-2xl text-left relative overflow-hidden transition-all duration-300 hover:shadow-[0_6px_24px_rgba(168,85,247,0.22)] active:scale-95"
                       >
                         <div className="absolute inset-y-0 right-0 w-1/2 bg-purple-400/10 blur-2xl" />
                         <img
@@ -886,7 +899,7 @@ export default function App() {
                             <span className="font-display text-lg font-black uppercase leading-none tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]">CRASH</span>
                             <h4 className="mt-2 text-[11px] font-sans font-extrabold leading-none tracking-tight text-white/85">Hit The Mines & Win</h4>
                           </div>
-                          <span className="mt-7 rounded-lg border border-white/25 bg-white/5 px-4 py-2 text-[10px] font-display font-black text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
+                          <span className="mt-6 sm:mt-7 rounded-lg border border-white/25 bg-white/5 px-4 py-1.5 sm:py-2 text-[10px] font-display font-black text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
                             Play Now
                           </span>
                         </div>
@@ -899,7 +912,7 @@ export default function App() {
                           sound.playClick();
                           setView('mines');
                         }}
-                        className="group min-h-[100px] sm:min-h-[112px] border border-cyan-300/35 bg-gradient-to-r from-[#0f766e] via-[#0891b2] to-[#22d3ee] p-4 rounded-2xl text-left relative overflow-hidden transition-all duration-300 hover:shadow-[0_6px_24px_rgba(34,211,238,0.22)] active:scale-95"
+                        className="group min-h-[90px] sm:min-h-[112px] border border-cyan-300/35 bg-gradient-to-r from-[#0f766e] via-[#0891b2] to-[#22d3ee] p-3.5 sm:p-4 rounded-2xl text-left relative overflow-hidden transition-all duration-300 hover:shadow-[0_6px_24px_rgba(34,211,238,0.22)] active:scale-95"
                       >
                         <div className="absolute inset-y-0 right-0 w-1/2 bg-white/20 blur-2xl" />
                         <img
@@ -912,7 +925,7 @@ export default function App() {
                             <span className="font-display text-lg font-black uppercase leading-none tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]">MINES</span>
                             <h4 className="mt-2 text-[11px] font-sans font-extrabold leading-none tracking-tight text-white/80">Hit The Mines & Win</h4>
                           </div>
-                          <span className="mt-7 rounded-lg border border-white/30 bg-white/5 px-4 py-2 text-[10px] font-display font-black text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                          <span className="mt-6 sm:mt-7 rounded-lg border border-white/30 bg-white/5 px-4 py-1.5 sm:py-2 text-[10px] font-display font-black text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
                             Play Now
                           </span>
                         </div>
@@ -928,27 +941,47 @@ export default function App() {
                           </span>
                           <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#f7d365] to-[#f69772]">Featured</span>
                         </span>
-                        <div className="flex gap-1.5 min-[380px]:gap-2 items-center shrink-0">
+                        <div className="flex items-center gap-1 shrink-0">
                           <button
                             onClick={() => {
                               sound.playClick();
                               setView('casino');
                             }}
-                            className="h-8 min-[380px]:h-10 min-[430px]:h-11 px-3 min-[380px]:px-4 min-[430px]:px-6 rounded-lg bg-black border border-[#f7d365] text-[#f7d365] text-[10px] min-[380px]:text-[12px] min-[430px]:text-[13px] font-display font-black tracking-tight hover:bg-[#f7d365]/10 active:scale-95 transition leading-none shadow-[0_2px_10px_rgba(247,211,101,0.1)]"
+                            className="h-6 px-2 rounded-full border border-[#59dcff]/50 bg-gradient-to-b from-[#35d6f5] via-[#08a9dc] to-[#087bbd] text-[#f1fcff] text-[8px] font-display font-bold tracking-tight shadow-[0_3px_8px_rgba(0,174,224,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:from-[#59e2ff] hover:via-[#19bce9] hover:to-[#0d8bd0] active:scale-95 transition leading-none"
                           >
                             View All
                           </button>
 
                           {/* Left right indicator arrows */}
-                          <div className="hidden min-[380px]:flex gap-1.5 min-[430px]:gap-2">
-                            <button onClick={() => sound.playClick()} className="h-10 w-10 min-[430px]:h-11 min-[430px]:w-11 rounded-lg bg-black border border-[#f7d365] flex items-center justify-center text-[#f7d365] hover:bg-[#f7d365]/10 active:scale-95 transition text-lg min-[430px]:text-xl font-display font-black shadow-[0_2px_10px_rgba(247,211,101,0.1)]">{"<"}</button>
-                            <button onClick={() => sound.playClick()} className="h-10 w-10 min-[430px]:h-11 min-[430px]:w-11 rounded-lg bg-black border border-[#f7d365] flex items-center justify-center text-[#f7d365] hover:bg-[#f7d365]/10 active:scale-95 transition text-lg min-[430px]:text-xl font-display font-black shadow-[0_2px_10px_rgba(247,211,101,0.1)]">{">"}</button>
+                          <div className="flex items-center gap-1 sm:hidden">
+                            <button
+                              aria-label="Scroll featured games left"
+                              onClick={() => {
+                                sound.playClick();
+                                const row = featuredGamesRowRef.current;
+                                if (row) row.scrollBy({ left: -(row.clientWidth * 0.75), behavior: 'smooth' });
+                              }}
+                              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#f7d365]/70 bg-[#08090c] text-[#f7d365] shadow-[0_2px_8px_rgba(247,211,101,0.2)] transition hover:border-[#fcd34d] hover:bg-[#17130a] active:scale-95"
+                            >
+                              <ChevronLeft size={14} strokeWidth={3} />
+                            </button>
+                            <button
+                              aria-label="Scroll featured games right"
+                              onClick={() => {
+                                sound.playClick();
+                                const row = featuredGamesRowRef.current;
+                                if (row) row.scrollBy({ left: row.clientWidth * 0.75, behavior: 'smooth' });
+                              }}
+                              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#f7d365]/70 bg-[#08090c] text-[#f7d365] shadow-[0_2px_8px_rgba(247,211,101,0.2)] transition hover:border-[#fcd34d] hover:bg-[#17130a] active:scale-95"
+                            >
+                              <ChevronRight size={14} strokeWidth={3} />
+                            </button>
                           </div>
                         </div>
                       </div>
 
                       {/* Scrollable featured cards grid row */}
-                      <div className="flex gap-3 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pb-1.5 min-w-0 max-w-full sm:grid sm:grid-cols-4 sm:overflow-x-visible sm:snap-none md:grid-cols-5 lg:grid-cols-6">
+                      <div ref={featuredGamesRowRef} className="flex gap-3 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pb-1.5 min-w-0 max-w-full sm:grid sm:grid-cols-4 sm:overflow-x-visible sm:snap-none md:grid-cols-5 lg:grid-cols-6">
                         {SLOT_GAMES.filter(slot => slot.category === 'featured').map((slot) => {
                           return (
                             <button
@@ -983,27 +1016,47 @@ export default function App() {
                           </span>
                           <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#f7d365] to-[#f69772]">Slots</span>
                         </span>
-                        <div className="flex gap-1.5 min-[380px]:gap-2 items-center shrink-0">
+                        <div className="flex items-center gap-1 shrink-0">
                           <button
                             onClick={() => {
                               sound.playClick();
                               setView('casino');
                             }}
-                            className="h-8 min-[380px]:h-10 min-[430px]:h-11 px-3 min-[380px]:px-4 min-[430px]:px-6 rounded-lg bg-black border border-[#f7d365] text-[#f7d365] text-[10px] min-[380px]:text-[12px] min-[430px]:text-[13px] font-display font-black tracking-tight hover:bg-[#f7d365]/10 active:scale-95 transition leading-none shadow-[0_2px_10px_rgba(247,211,101,0.1)]"
+                            className="h-6 px-2 rounded-full border border-[#59dcff]/50 bg-gradient-to-b from-[#35d6f5] via-[#08a9dc] to-[#087bbd] text-[#f1fcff] text-[8px] font-display font-bold tracking-tight shadow-[0_3px_8px_rgba(0,174,224,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:from-[#59e2ff] hover:via-[#19bce9] hover:to-[#0d8bd0] active:scale-95 transition leading-none"
                           >
                             View All
                           </button>
 
                           {/* Left right indicator arrows */}
-                          <div className="hidden min-[380px]:flex gap-1.5 min-[430px]:gap-2">
-                            <button onClick={() => sound.playClick()} className="h-10 w-10 min-[430px]:h-11 min-[430px]:w-11 rounded-lg bg-black border border-[#f7d365] flex items-center justify-center text-[#f7d365] hover:bg-[#f7d365]/10 active:scale-95 transition text-lg min-[430px]:text-xl font-display font-black shadow-[0_2px_10px_rgba(247,211,101,0.1)]">{"<"}</button>
-                            <button onClick={() => sound.playClick()} className="h-10 w-10 min-[430px]:h-11 min-[430px]:w-11 rounded-lg bg-black border border-[#f7d365] flex items-center justify-center text-[#f7d365] hover:bg-[#f7d365]/10 active:scale-95 transition text-lg min-[430px]:text-xl font-display font-black shadow-[0_2px_10px_rgba(247,211,101,0.1)]">{">"}</button>
+                          <div className="flex items-center gap-1 sm:hidden">
+                            <button
+                              aria-label="Scroll slots left"
+                              onClick={() => {
+                                sound.playClick();
+                                const row = slotsGamesRowRef.current;
+                                if (row) row.scrollBy({ left: -(row.clientWidth * 0.75), behavior: 'smooth' });
+                              }}
+                              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#f7d365]/70 bg-[#08090c] text-[#f7d365] shadow-[0_2px_8px_rgba(247,211,101,0.2)] transition hover:border-[#fcd34d] hover:bg-[#17130a] active:scale-95"
+                            >
+                              <ChevronLeft size={14} strokeWidth={3} />
+                            </button>
+                            <button
+                              aria-label="Scroll slots right"
+                              onClick={() => {
+                                sound.playClick();
+                                const row = slotsGamesRowRef.current;
+                                if (row) row.scrollBy({ left: row.clientWidth * 0.75, behavior: 'smooth' });
+                              }}
+                              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#f7d365]/70 bg-[#08090c] text-[#f7d365] shadow-[0_2px_8px_rgba(247,211,101,0.2)] transition hover:border-[#fcd34d] hover:bg-[#17130a] active:scale-95"
+                            >
+                              <ChevronRight size={14} strokeWidth={3} />
+                            </button>
                           </div>
                         </div>
                       </div>
 
                       {/* Scrollable slots cards grid row */}
-                      <div className="flex gap-3 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pb-1.5 min-w-0 max-w-full sm:grid sm:grid-cols-4 sm:overflow-x-visible sm:snap-none md:grid-cols-5 lg:grid-cols-6">
+                      <div ref={slotsGamesRowRef} className="flex gap-3 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pb-1.5 min-w-0 max-w-full sm:grid sm:grid-cols-4 sm:overflow-x-visible sm:snap-none md:grid-cols-5 lg:grid-cols-6">
                         {SLOT_GAMES.filter(slot => slot.category === 'slots').map((slot) => {
                           return (
                             <button
@@ -1399,7 +1452,7 @@ export default function App() {
           {/* BOTTOM DEVICE NAVIGATION BAR */}
           <div
             id="global_bottom_navbar"
-            className={`${view === 'search' ? 'hidden' : 'fixed bottom-0 left-0 right-0 h-[65px] z-30 select-none bg-[#0a0a0a]/40 backdrop-blur-2xl border-t border-white/10 lg:hidden flex justify-around items-center'}`}
+            className="fixed bottom-0 left-0 right-0 h-[65px] z-30 select-none bg-[#0a0a0a]/40 backdrop-blur-2xl border-t border-white/10 lg:hidden flex justify-around items-center"
           >
             {/* Menu */}
             <button

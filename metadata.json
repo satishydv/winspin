@@ -1,0 +1,6 @@
+{
+  "name": "WinSpin Mobile Casino",
+  "description": "A premium mobile-first interactive casino experience with gold accents, live multiplayer chat, and playable games like Crash, Mines, and Slots.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

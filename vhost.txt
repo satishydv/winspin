@@ -1,0 +1,56 @@
+server {
+  listen 80;
+  listen [::]:80;
+  listen 443 quic;
+  listen 443 ssl;
+  listen [::]:443 quic;
+  listen [::]:443 ssl;
+  http2 on;
+  http3 off;
+  {{ssl_certificate_key}}
+  {{ssl_certificate}}
+  server_name admin.faizalkhan.codes;
+  {{root}}
+
+  {{nginx_access_log}}
+  {{nginx_error_log}}
+
+  if ($scheme != "https") {
+    rewrite ^ https://$host$request_uri permanent;
+  }
+
+  location ~ /\.well-known {
+    auth_basic off;
+    allow all;
+  }
+
+  # --- PROXY FOR CDN GAMES API ---
+  location /api/games/ {
+    proxy_pass https://cdn.vara-567.com/api/games/;
+    proxy_set_header Host cdn.vara-567.com;
+    proxy_ssl_server_name on;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+  # -------------------------------
+
+  # --- REACT FRONTEND ROUTING ---
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+
+  # --- CACHE STATIC ASSETS FOR FAST LOADING ---
+  location ~* \.(3gp|gif|jpg|jpeg|png|ico|wmv|avi|asf|asx|mpg|mpeg|mp4|pls|mp3|mid|wav|swf|flv|exe|zip|tar|rar|gz|tgz|bz2|uha|7z|doc|docx|xls|xlsx|pdf|iso|eot|svg|ttf|woff|woff2)$ {
+    gzip_static off;
+    add_header Cache-Control "public, max-age=31536000";
+    add_header Access-Control-Allow-Origin *;
+    try_files $uri =404;
+  }
+
+  location ~* \.(css|js)$ {
+    add_header Cache-Control "public, max-age=31536000";
+    add_header Access-Control-Allow-Origin *;
+    try_files $uri =404;
+  }
+}

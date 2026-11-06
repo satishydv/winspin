@@ -1,0 +1,441 @@
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Gothic A1", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Gothic A1", ui-sans-serif, system-ui, sans-serif;
+
+  --color-dark-950: #050608;
+  --color-dark-900: #0a0b0f;
+  --color-dark-800: #12141c;
+  --color-dark-700: #1a1d28;
+  --color-dark-600: #252938;
+
+  --color-gold-50: #fffdf0;
+  --color-gold-100: #fff9cb;
+  --color-gold-200: #fff097;
+  --color-gold-300: #ffe158;
+  --color-gold-400: #ffd024;
+  --color-gold-500: #eab308;
+  --color-gold-600: #ca8a04;
+  --color-gold-700: #a16207;
+  --color-gold-primary: #ffd700;
+  --color-gold-accent: #facc15;
+  --color-gold-bright: #fef08a;
+
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-spin-slow: spin 8s linear infinite;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ca8a04;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #facc15;
+}
+
+body {
+  background-color: #030406;
+  color: #f3f4f6;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Make custom glow utilities */
+.gold-glow-sm {
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.15);
+}
+
+.gold-glow {
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
+}
+
+.gold-glow-lg {
+  box-shadow: 0 0 35px rgba(250, 204, 21, 0.45);
+}
+
+.gold-text-glow {
+  text-shadow: 0 0 12px rgba(250, 204, 21, 0.6);
+}
+
+@keyframes win-shake {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  10% {
+    transform: translate(-3px, 2px) rotate(-1deg);
+  }
+
+  20% {
+    transform: translate(2px, -3px) rotate(1deg);
+  }
+
+  30% {
+    transform: translate(-2px, -2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(3px, 3px) rotate(1deg);
+  }
+
+  50% {
+    transform: translate(-3px, 1px) rotate(-1deg);
+  }
+
+  60% {
+    transform: translate(2px, -2px) rotate(0deg);
+  }
+
+  70% {
+    transform: translate(-1px, 3px) rotate(1deg);
+  }
+
+  80% {
+    transform: translate(3px, -1px) rotate(-1deg);
+  }
+
+  90% {
+    transform: translate(-2px, 2px) rotate(1deg);
+  }
+}
+
+@keyframes gold-pulse-shadow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.4), inset 0 0 15px rgba(250, 204, 21, 0.2);
+    border-color: #ffd024;
+  }
+
+  50% {
+    box-shadow: 0 0 45px rgba(250, 204, 21, 0.95), inset 0 0 25px rgba(250, 204, 21, 0.5);
+    border-color: #facc15;
+  }
+}
+
+.animate-win-shake {
+  animation: win-shake 0.3s ease-in-out infinite;
+}
+
+.animate-gold-pulse-glow {
+  animation: gold-pulse-shadow 0.6s ease-in-out infinite;
+}
+
+/* Hide scrollbars for layout tracks */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.mobile-nav-dock {
+  bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+}
+
+/* ADMIN DASHBOARD STYLES */
+
+
+@theme {
+  --font-sans: "Gothic A1", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Gothic A1", sans-serif;
+  
+  --color-obsidian-950: #060709;
+  --color-obsidian-900: #0D1017;
+  --color-obsidian-800: #151A24;
+  --color-obsidian-700: #1E2533;
+  --color-obsidian-600: #2C3549;
+  --color-gold-400: #FCD34D;
+  --color-gold-500: #F59E0B;
+  --color-gold-600: #D97706;
+  --color-emerald-neon: #10B981;
+  --color-rose-neon: #EF4444;
+}
+
+/* Custom scrollbars for a premium terminal-inspired feeling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090B0E;
+}
+::-webkit-scrollbar-thumb {
+  background: #252D3D;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F59E0B;
+}
+
+/* Sleek subtle pattern background overlay class */
+.cyber-grid {
+  background-image: 
+    linear-gradient(rgba(245, 158, 11, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 158, 11, 0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Keyframes for fluid physical interaction */
+@keyframes blob-bounce {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  33% {
+    transform: translate(30px, -45px) scale(1.15);
+    border-radius: 40% 60% 50% 50% / 50% 60% 45% 55%;
+  }
+  66% {
+    transform: translate(-35px, 20px) scale(0.85);
+    border-radius: 70% 30% 60% 40% / 40% 50% 60% 50%;
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+}
+
+.animate-blob-1 {
+  animation: blob-bounce 14s infinite alternate ease-in-out;
+}
+
+.animate-blob-2 {
+  animation: blob-bounce 10s infinite alternate-reverse ease-in-out;
+}
+
+/* iOS glass plate with glossy specularity */
+.ios-liquid-glass {
+  background: rgba(14, 18, 30, 0.72);
+  backdrop-filter: blur(28px) saturate(220%);
+  -webkit-backdrop-filter: blur(28px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.35),
+    0 12px 40px -8px rgba(0, 0, 0, 0.65),
+    0 0 1px 1.5px rgba(255, 255, 255, 0.08);
+}
+
+/* Glass Buttons with 3D liquid glossy finish */
+.ios-glass-btn-primary {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 100%), #4E5DFD;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 2px 10px rgba(78, 93, 253, 0.35),
+    inset 0 -1.5px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.3);
+}
+
+.ios-glass-btn-danger {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 100%), #EF4444;
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 
+    0 2px 10px rgba(239, 68, 68, 0.35),
+    inset 0 -1.5px 4px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.3);
+}
+
+.ios-glass-btn-secondary {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), rgba(30, 41, 59, 0.7);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.2),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Premium Fluid Gradient for Buttons & Sidebar Indicators matching user image */
+.premium-gradient-glow {
+  background: linear-gradient(90deg, #4E5DFD 0%, #151336 100%) !important;
+  border: 1px solid rgba(78, 93, 253, 0.45) !important;
+  color: #ffffff !important;
+  box-shadow: 
+    0 4px 14px -1px rgba(78, 93, 253, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.premium-gradient-glow:hover {
+  background: linear-gradient(90deg, #5D6CFF 0%, #1C194D 100%) !important;
+  border-color: rgba(78, 93, 253, 0.65) !important;
+  box-shadow: 
+    0 6px 20px -1px rgba(78, 93, 253, 0.45),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-active-gradient {
+  background: linear-gradient(90deg, #4E5DFD 0%, #13122B 100%) !important;
+  border: 1px solid rgba(78, 93, 253, 0.35) !important;
+  color: #ffffff !important;
+  font-weight: 750 !important;
+  box-shadow: 
+    0 4px 12px -2px rgba(78, 93, 253, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Adaptive Light Mode Stylesheet Layer */
+body.light-theme,
+.light-theme {
+  background-color: #f3f4f6 !important;
+  color: #1e293b !important;
+}
+
+.light-theme .bg-slate-950,
+.light-theme .bg-obsidian-950,
+.light-theme .bg-black {
+  background-color: #f8fafc !important;
+}
+
+.light-theme .bg-slate-900,
+.light-theme .bg-obsidian-900,
+.light-theme .bg-[#0b0c1e],
+.light-theme .bg-[#0a0c1b],
+.light-theme .bg-slate-900\/60,
+.light-theme .bg-slate-900\/80,
+.light-theme .bg-obsidian-900\/60 {
+  background-color: #ffffff !important;
+}
+
+.light-theme .bg-slate-800,
+.light-theme .bg-slate-800\/10,
+.light-theme .bg-slate-800\/20 {
+  background-color: #f1f5f9 !important;
+}
+
+.light-theme .bg-slate-950\/20,
+.light-theme .bg-obsidian-950\/20,
+.light-theme .bg-slate-950\/40,
+.light-theme .bg-obsidian-950\/40,
+.light-theme .bg-[#151433] {
+  background-color: #f8fafc !important;
+}
+
+.light-theme .border-slate-800,
+.light-theme .border-slate-850,
+.light-theme .border-slate-900,
+.light-theme .border-[#4E5DFD]\/30,
+.light-theme .border-slate-800\/80 {
+  border-color: #e2e8f0 !important;
+}
+
+.light-theme .text-white,
+.light-theme .text-slate-100,
+.light-theme .text-slate-200,
+.light-theme .text-slate-300 {
+  color: #1e293b !important;
+}
+
+.light-theme .text-slate-400,
+.light-theme .text-slate-450,
+.light-theme .text-slate-500 {
+  color: #64748b !important;
+}
+
+.light-theme .text-slate-350 {
+  color: #475569 !important;
+}
+
+.light-theme .text-indigo-400 {
+  color: #3b82f6 !important;
+}
+
+.light-theme .text-amber-500 {
+  color: #b45309 !important;
+}
+
+.light-theme .bg-slate-900\/50 {
+  background-color: #f8fafc !important;
+}
+
+.light-theme .sidebar-active-gradient {
+  background: linear-gradient(90deg, #4E5DFD 0%, #e2e8f0 100%) !important;
+  color: #ffffff !important;
+}
+
+.light-theme input, 
+.light-theme select, 
+.light-theme textarea {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.light-theme .bg-indigo-950\/25,
+.light-theme .bg-indigo-950\/40 {
+  background-color: #eff6ff !important;
+}
+
+.light-theme .bg-emerald-950\/20,
+.light-theme .bg-emerald-950\/40 {
+  background-color: #f0fdf4 !important;
+}
+
+.light-theme .bg-rose-950\/20,
+.light-theme .bg-rose-950\/40 {
+  background-color: #fef2f2 !important;
+}
+
+/* Custom Shiny Brass Golden Headings */
+.admin-dashboard-root h1, .admin-dashboard-root h2, .admin-dashboard-root h3, .admin-dashboard-root h4, .admin-dashboard-root h5, .admin-dashboard-root h6 {
+  background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Ensure that icons inside headings don't turn transparent or lose their colors */
+.admin-dashboard-root h1 svg, .admin-dashboard-root h2 svg, .admin-dashboard-root h3 svg, .admin-dashboard-root h4 svg, .admin-dashboard-root h5 svg, .admin-dashboard-root h6 svg {
+  -webkit-text-fill-color: initial !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+}
+
+/* Keep any nested spans inside headings beautifully styled with the gradient inherit */
+.admin-dashboard-root h1 span, .admin-dashboard-root h2 span, .admin-dashboard-root h3 span, .admin-dashboard-root h4 span, .admin-dashboard-root h5 span, .admin-dashboard-root h6 span {
+  background: inherit !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+

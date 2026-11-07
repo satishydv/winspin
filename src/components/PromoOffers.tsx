@@ -211,7 +211,7 @@ export default function PromoOffers({
   };
 
   return (
-    <div id="promos_page_layout" className="flex flex-col h-full bg-[#0a0b0f] overflow-y-auto no-scrollbar pb-24 text-xs text-gray-300">
+    <div id="promos_page_layout" className="flex flex-col h-full bg-[#0a0b0f] overflow-y-auto no-scrollbar pb-[65px] text-xs text-gray-300">
       
       {/* TABS SELECTOR AT TOP */}
       <div id="promos_tabs_nav" className="flex items-center justify-center border-b border-[#1b1d26] bg-[#0c0e14] px-4 py-2 sticky top-0 z-30 shadow-md">

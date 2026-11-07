@@ -1,4 +1,4 @@
-export type GameType = 'home' | 'crash' | 'mines' | 'slots' | 'promo' | 'chats' | 'history' | 'casino' | 'accounts' | 'account_statement' | 'register' | 'login' | '404' | 'sports' | 'search' | 'admin' | 'withdraw' | 'deposit';
+export type GameType = 'home' | 'crash' | 'mines' | 'slots' | 'promo' | 'chats' | 'history' | 'casino' | 'accounts' | 'bets' | 'account_statement' | 'register' | 'login' | '404' | 'sports' | 'search' | 'admin' | 'withdraw' | 'deposit';
 
 export interface UserProfile {
   username: string;

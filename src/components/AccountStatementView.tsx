@@ -46,7 +46,7 @@ export default function AccountStatementView() {
   ];
 
   return (
-    <div className="flex flex-col h-full bg-[#0a0b0f] text-white font-sans overflow-y-auto no-scrollbar p-4 lg:p-6 pb-24">
+    <div className="flex flex-col h-full bg-[#0a0b0f] text-white font-sans overflow-y-auto no-scrollbar p-4 lg:p-6 pb-[65px]">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1e222d] to-[#12141a] border border-[#2a2e39] flex items-center justify-center shrink-0">

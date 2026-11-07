@@ -143,7 +143,7 @@ export default function SearchView({ onBack }: SearchViewProps) {
         </div>
       </form>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden no-scrollbar pb-24 lg:pb-5">
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden no-scrollbar pb-[65px] lg:pb-5">
         <div className="flex flex-col gap-6 px-4 pb-5 pt-5">
           <section aria-labelledby="recent-searches-heading" className="flex flex-col gap-3">
             <div className="flex items-center justify-between">

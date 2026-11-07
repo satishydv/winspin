@@ -120,7 +120,7 @@ export default function AccountsView({
   };
 
   return (
-    <div id="accounts_view_page" className="h-full flex flex-col bg-[#07080a] text-gray-200 overflow-y-auto no-scrollbar pb-24">
+    <div id="accounts_view_page" className="h-full flex flex-col bg-[#07080a] text-gray-200 overflow-y-auto no-scrollbar pb-[65px]">
       
       {/* 1. HORIZONTAL SCROLLABLE TAB SELECTOR */}
       <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-3 border-b border-[#14161d] px-4 bg-[#0a0b0f] sticky top-0 z-10 shrink-0">

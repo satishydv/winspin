@@ -43,7 +43,7 @@ export default function DepositView({ user, setView, updateBalance }: DepositVie
   };
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto bg-[#0a0b0f] pb-24 relative no-scrollbar font-sans">
+    <div className="flex flex-col h-full overflow-y-auto bg-[#0a0b0f] pb-[65px] relative no-scrollbar font-sans">
       
       {/* Top Header - Premium App Style */}
       <div className="sticky top-0 z-20 bg-[#0a0b0f]/80 backdrop-blur-xl border-b border-[#1c1e26] flex items-center justify-between p-4 shadow-sm">

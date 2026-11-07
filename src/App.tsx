@@ -33,7 +33,8 @@ import {
   MessagesSquare,
   Gamepad2,
   Blocks,
-  Search
+  Search,
+  Trophy
 } from 'lucide-react';
 import { GameType, SlotGameId, UserProfile, BetHistoryItem, ApiGame } from './types';
 import { PROVIDERS, SLOT_GAMES } from './data';
@@ -58,6 +59,7 @@ import NotFoundView from './components/NotFoundView';
 import SportsPlaceholder from './components/SportsPlaceholder';
 import FallbackImage from './components/FallbackImage';
 import SearchView from './components/SearchView';
+import BetsView from './components/BetsView';
 import heroImage from '../assets/images/hero/hero.png';
 import rocketImage from '../assets/images/cards/rocket.png';
 import bombImage from '../assets/images/cards/bomb.png';
@@ -142,6 +144,8 @@ export default function App() {
         return '/casino';
       case 'accounts':
         return '/accounts';
+      case 'bets':
+        return '/bets';
       case 'account_statement':
         return '/account-statement';
       case 'withdraw':
@@ -188,6 +192,10 @@ export default function App() {
     }
     if (path === '/search') {
       setView('search');
+      return;
+    }
+    if (path === '/bets') {
+      setView('bets');
       return;
     }
 
@@ -328,7 +336,7 @@ export default function App() {
       };
     });
 
-    // Record logging item in historic array list (keep max 15 records in session scroll)
+    // Record game results only while a game is active (keep the newest 15 ledger events).
     const newRecord: BetHistoryItem = {
       id: Math.random().toString(),
       game: gameType,
@@ -339,7 +347,9 @@ export default function App() {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
     };
 
-    setBetHistory(prev => [newRecord, ...prev.slice(0, 14)]);
+    if (view === 'crash' || view === 'mines' || view === 'slots') {
+      setBetHistory(prev => [newRecord, ...prev.slice(0, 14)]);
+    }
   };
 
   // Sound manager link
@@ -596,7 +606,7 @@ export default function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex flex-col h-full overflow-y-auto overflow-x-hidden no-scrollbar pb-24 lg:pb-6"
+                  className="flex flex-col h-full overflow-y-auto overflow-x-hidden no-scrollbar pb-[65px] lg:pb-6"
                 >
 
                   {/* LOBBY CONTENT SCROLL */}
@@ -1218,7 +1228,7 @@ export default function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex flex-col h-full overflow-y-auto overflow-x-hidden no-scrollbar p-4 pb-24 lg:pb-4 gap-4"
+                  className="flex flex-col h-full overflow-y-auto overflow-x-hidden no-scrollbar p-4 pb-[65px] lg:pb-4 gap-4"
                 >
                   <div className="flex items-center gap-2 border-b border-dark-800 pb-2 bg-transparent sticky top-0 shrink-0 z-10">
                     <h2 className="text-sm font-display font-black text-gold-accent tracking-wide uppercase leading-none">CASINO FLAGG SHIP GAMES</h2>
@@ -1329,6 +1339,19 @@ export default function App() {
                 </motion.div>
               )}
 
+              {/* BETS HISTORY VIEW */}
+              {view === 'bets' && (
+                <motion.div
+                  key="bets_screen"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="h-full"
+                >
+                  <BetsView history={betHistory} />
+                </motion.div>
+              )}
+
               {/* ACCOUNT STATEMENT VIEW */}
               {view === 'account_statement' && (
                 <motion.div
@@ -1429,7 +1452,7 @@ export default function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex flex-col h-full overflow-y-auto overflow-x-hidden no-scrollbar pb-24 lg:pb-6"
+                  className="flex flex-col h-full overflow-y-auto overflow-x-hidden no-scrollbar pb-[65px] lg:pb-6"
                 >
                   <RegisterModal
                     initialMode={view}
@@ -1452,7 +1475,7 @@ export default function App() {
           {/* BOTTOM DEVICE NAVIGATION BAR */}
           <div
             id="global_bottom_navbar"
-            className="fixed bottom-0 left-0 right-0 h-[65px] z-30 select-none bg-[#0a0a0a]/40 backdrop-blur-2xl border-t border-white/10 lg:hidden flex justify-around items-center"
+            className="fixed bottom-0 left-0 right-0 h-[65px] z-30 select-none bg-[#0b111c]/65 backdrop-blur-xl border-t border-white/10 shadow-[0_-8px_24px_rgba(0,0,0,0.22)] lg:hidden flex justify-around items-center"
           >
             {/* Menu */}
             <button
@@ -1462,19 +1485,14 @@ export default function App() {
               }}
               className="flex-1 h-full flex flex-col items-center justify-center group select-none transition-transform active:scale-95 duration-100 relative"
             >
-              {isSidebarOpen && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#fcd34d] to-transparent"></div>}
-              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${isSidebarOpen ? 'text-[#fcd34d]' : 'text-[#888888] group-hover:text-gray-300'}`}>
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M7 4a4 4 0 0 1 8 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h1V4z" />
-                  <rect x="5.5" y="9.5" width="11" height="5.5" rx="1" fill="#0a0a0a" />
-                  <rect x="6.5" y="10.5" width="2" height="3" fill="currentColor" />
-                  <rect x="10" y="10.5" width="2" height="3" fill="currentColor" />
-                  <rect x="13.5" y="10.5" width="2" height="3" fill="currentColor" />
-                  <path d="M18 10h1.5a1.5 1.5 0 0 0 1.5-1.5v-3" stroke="currentColor" fill="none" strokeWidth="2" />
-                  <circle cx="21" cy="4.5" r="1.5" />
+              {isSidebarOpen && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#65e4ed] to-transparent"></div>}
+              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${isSidebarOpen ? 'text-[#65e4ed]' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                  <path d="M3.2 10.2 12 3l8.8 7.2v9.1a1.7 1.7 0 0 1-1.7 1.7H4.9a1.7 1.7 0 0 1-1.7-1.7v-9.1Z" />
+                  <path d="M10 14h4v6h-4z" fill="#0b111c" />
                 </svg>
               </div>
-              <span className={`text-[10px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${isSidebarOpen ? 'text-white' : 'text-[#888888] group-hover:text-gray-300'}`}>
+              <span className={`text-[9px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${isSidebarOpen ? 'text-white' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
                 Menu
               </span>
             </button>
@@ -1487,17 +1505,11 @@ export default function App() {
               }}
               className="flex-1 h-full flex flex-col items-center justify-center group select-none transition-transform active:scale-95 duration-100 relative"
             >
-              {(view === 'casino' || view === 'slots' || view === 'home' || view === 'crash' || view === 'mines') && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#fcd34d] to-transparent"></div>}
-              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${(view === 'casino' || view === 'slots' || view === 'home' || view === 'crash' || view === 'mines') ? 'text-[#fcd34d]' : 'text-[#888888] group-hover:text-gray-300'}`}>
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-                  <mask id="live-mask">
-                    <rect width="24" height="24" fill="white" />
-                    <text x="12" y="15.5" fill="black" fontSize="7.5" fontFamily="system-ui, sans-serif" fontWeight="900" textAnchor="middle" letterSpacing="0.5">•LIVE</text>
-                  </mask>
-                  <rect x="1" y="6" width="22" height="12" rx="4" mask="url(#live-mask)" />
-                </svg>
+              {(view === 'casino' || view === 'slots' || view === 'home' || view === 'crash' || view === 'mines') && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#65e4ed] to-transparent"></div>}
+              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${(view === 'casino' || view === 'slots' || view === 'home' || view === 'crash' || view === 'mines') ? 'text-[#65e4ed]' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
+                <Gamepad2 size={20} strokeWidth={2.2} />
               </div>
-              <span className={`text-[10px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${(view === 'casino' || view === 'slots' || view === 'home' || view === 'crash' || view === 'mines') ? 'text-white' : 'text-[#888888] group-hover:text-gray-300'}`}>
+              <span className={`text-[9px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${(view === 'casino' || view === 'slots' || view === 'home' || view === 'crash' || view === 'mines') ? 'text-white' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
                 Casino
               </span>
             </button>
@@ -1506,21 +1518,15 @@ export default function App() {
             <button
               onClick={() => {
                 sound.playClick();
-                setView('accounts');
+                setView('bets');
               }}
               className="flex-1 h-full flex flex-col items-center justify-center group select-none transition-transform active:scale-95 duration-100 relative"
             >
-              {view === 'accounts' && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#fcd34d] to-transparent"></div>}
-              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${view === 'accounts' ? 'text-[#fcd34d]' : 'text-[#888888] group-hover:text-gray-300'}`}>
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-                  <mask id="promo-mask">
-                    <rect width="24" height="24" fill="white" />
-                    <path d="M12 9l1 2.2 2.4.4-1.7 1.6.4 2.4-2.1-1.1-2.1 1.1.4-2.4-1.7-1.6 2.4-.4L12 9z" fill="black" />
-                  </mask>
-                  <path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z" mask="url(#promo-mask)" />
-                </svg>
+              {view === 'bets' && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#65e4ed] to-transparent"></div>}
+              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${view === 'bets' ? 'text-[#65e4ed]' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
+                <Trophy size={20} strokeWidth={2.2} />
               </div>
-              <span className={`text-[10px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${view === 'accounts' ? 'text-white' : 'text-[#888888] group-hover:text-gray-300'}`}>
+              <span className={`text-[9px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${view === 'bets' ? 'text-white' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
                 Bets
               </span>
             </button>
@@ -1533,11 +1539,11 @@ export default function App() {
               }}
               className="flex-1 h-full flex flex-col items-center justify-center group select-none transition-transform active:scale-95 duration-100 relative"
             >
-              {view === 'search' && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#fcd34d] to-transparent"></div>}
-              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${view === 'search' ? 'text-[#fcd34d]' : 'text-[#888888] group-hover:text-gray-300'}`}>
+              {view === 'search' && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#65e4ed] to-transparent"></div>}
+              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${view === 'search' ? 'text-[#65e4ed]' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
                 <Search size={26} strokeWidth={2.2} />
               </div>
-              <span className={`text-[10px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${view === 'search' ? 'text-white' : 'text-[#888888] group-hover:text-gray-300'}`}>
+              <span className={`text-[9px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${view === 'search' ? 'text-white' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
                 Search
               </span>
             </button>
@@ -1550,17 +1556,11 @@ export default function App() {
               }}
               className="flex-1 h-full flex flex-col items-center justify-center group select-none transition-transform active:scale-95 duration-100 relative"
             >
-              {view === 'promo' && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#fcd34d] to-transparent"></div>}
-              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${view === 'promo' ? 'text-[#fcd34d]' : 'text-[#888888] group-hover:text-gray-300'}`}>
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-                  <mask id="affiliate-mask">
-                    <rect width="24" height="24" fill="white" />
-                    <circle cx="15.5" cy="8.5" r="1.5" fill="black" />
-                  </mask>
-                  <path d="M12 2a3 3 0 0 0-2.8 4A3 3 0 0 0 4 10.5a3 3 0 0 0 2.2 2.9A3 3 0 0 0 8 19a3 3 0 0 0 4-1 3 3 0 0 0 4 1 3 3 0 0 0 1.8-5.6A3 3 0 0 0 20 10.5a3 3 0 0 0-5.2-4.5A3 3 0 0 0 12 2z" mask="url(#affiliate-mask)" />
-                </svg>
+              {view === 'promo' && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#65e4ed] to-transparent"></div>}
+              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${view === 'promo' ? 'text-[#65e4ed]' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
+                <Gift size={20} strokeWidth={2.2} />
               </div>
-              <span className={`text-[10px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${view === 'promo' ? 'text-white' : 'text-[#888888] group-hover:text-gray-300'}`}>
+              <span className={`text-[9px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${view === 'promo' ? 'text-white' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
                 Rewards
               </span>
             </button>

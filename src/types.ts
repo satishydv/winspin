@@ -1,4 +1,4 @@
-export type GameType = 'home' | 'crash' | 'mines' | 'slots' | 'promo' | 'chats' | 'history' | 'casino' | 'accounts' | 'bets' | 'account_statement' | 'register' | 'login' | '404' | 'sports' | 'search' | 'admin' | 'withdraw' | 'deposit';
+export type GameType = 'home' | 'crash' | 'mines' | 'promo' | 'chats' | 'history' | 'casino' | 'accounts' | 'bets' | 'account_statement' | 'register' | 'login' | '404' | 'sports' | 'search' | 'admin' | 'withdraw' | 'deposit';
 
 export interface UserProfile {
   username: string;
@@ -32,14 +32,6 @@ export interface ChatMessage {
   winMultiplier?: number;
 }
 
-export interface SlotSymbol {
-  id: string;
-  name: string;
-  multiplier: number;
-  image: string; // Emoji character or label
-  color: string;
-}
-
 export interface MineCell {
   id: number;
   isMine: boolean;
@@ -56,7 +48,6 @@ export interface GameInfo {
   themeColor: string;
   accentColor: string;
   minBet: number;
-  symbols: SlotSymbol[];
   category?: 'featured' | 'slots' | 'popular';
 }
 

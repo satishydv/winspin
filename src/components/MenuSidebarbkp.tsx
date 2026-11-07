@@ -696,12 +696,12 @@ export default function MenuSidebar({
                   onClose();
                 }}
                 className={`p-2.5 rounded-xl flex items-center gap-3 transition-all duration-200 text-xs text-left group ${
-                  activeView === 'casino' || activeView === 'slots'
+                  activeView === 'casino'
                     ? 'bg-[#181a1f] text-white border border-[#292d37]' 
                     : 'bg-transparent text-[#979da7] hover:bg-[#12141a]/60 hover:text-white'
                 }`}
               >
-                <Cherry size={14} className={activeView === 'casino' || activeView === 'slots' ? 'text-[#e3ff36]' : 'text-[#8e92a2] group-hover:text-[#e3ff36]'} />
+                <Cherry size={14} className={activeView === 'casino' ? 'text-[#e3ff36]' : 'text-[#8e92a2] group-hover:text-[#e3ff36]'} />
                 <span className="font-bold flex-1 leading-none tracking-wide text-[12.5px]">Slots</span>
               </button>
 

@@ -34,9 +34,9 @@ import {
   Gamepad2,
   Blocks,
   Search,
-  Trophy
+  ReceiptText
 } from 'lucide-react';
-import { GameType, SlotGameId, UserProfile, BetHistoryItem, ApiGame } from './types';
+import { GameType, UserProfile, BetHistoryItem, ApiGame } from './types';
 import { PROVIDERS, SLOT_GAMES } from './data';
 import { sound } from './utils/audio';
 
@@ -44,7 +44,6 @@ import { sound } from './utils/audio';
 import AdminApp from './AdminApp';
 import MinesGame from './components/MinesGame';
 import CrashGame from './components/CrashGame';
-import SlotsGame from './components/SlotsGame';
 import LiveChats from './components/LiveChats';
 import PromoOffers from './components/PromoOffers';
 import MenuSidebar from './components/MenuSidebar';
@@ -54,7 +53,6 @@ import WithdrawView from './components/WithdrawView';
 import DepositView from './components/DepositView';
 import RegisterModal from './components/RegisterModal';
 import BonusModal from './components/BonusModal';
-import PlayModeModal from './components/PlayModeModal';
 import NotFoundView from './components/NotFoundView';
 import SportsPlaceholder from './components/SportsPlaceholder';
 import FallbackImage from './components/FallbackImage';
@@ -67,7 +65,6 @@ import bombImage from '../assets/images/cards/bomb.png';
 export default function App() {
   // Navigation current view state
   const [view, setViewState] = useState<GameType>('home');
-  const [slotsGameId, setSlotsGameId] = useState<SlotGameId>('ras_reckoning');
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const featuredGamesRowRef = useRef<HTMLDivElement>(null);
@@ -75,8 +72,6 @@ export default function App() {
 
   // Deposit and Withdraw Sandbox modal states
   const [showBonusModal, setShowBonusModal] = useState<boolean>(false);
-  const [showPlayModeModal, setShowPlayModeModal] = useState<boolean>(false);
-  const [selectedFeaturedSlot, setSelectedFeaturedSlot] = useState<SlotGameId | null>(null);
   const [showDepositModal, setShowDepositModal] = useState<boolean>(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState<boolean>(false);
   const [depositAmountInput, setDepositAmountInput] = useState<string>('500');
@@ -134,8 +129,6 @@ export default function App() {
         return '/crash';
       case 'mines':
         return '/mines';
-      case 'slots':
-        return '/slots';
       case 'promo':
         return '/promo';
       case 'chats':
@@ -211,7 +204,7 @@ export default function App() {
         setView('mines');
         break;
       case '/slots':
-        setView('slots');
+        setView('casino');
         break;
       case '/promo':
         setView('promo');
@@ -347,7 +340,7 @@ export default function App() {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
     };
 
-    if (view === 'crash' || view === 'mines' || view === 'slots') {
+    if (view === 'crash' || view === 'mines') {
       setBetHistory(prev => [newRecord, ...prev.slice(0, 14)]);
     }
   };
@@ -379,10 +372,9 @@ export default function App() {
   };
 
   // Quick navigation utility helper
-  const navigateToSlots = (id: SlotGameId) => {
+  const navigateToCasino = () => {
     sound.playClick();
-    setSlotsGameId(id);
-    setView('slots');
+    setView('casino');
   };
 
   if (view === 'admin') {
@@ -424,7 +416,7 @@ export default function App() {
             setView={setView}
             activeView={view}
             updateBalance={updateBalance}
-            navigateToSlots={navigateToSlots}
+            navigateToCasino={navigateToCasino}
             onOpenRegister={() => setView('register')}
           />
         </div>
@@ -998,9 +990,7 @@ export default function App() {
                               key={slot.id}
                               id={`lobby_featured_${slot.id}`}
                               onClick={() => {
-                                sound.playClick();
-                                setSelectedFeaturedSlot(slot.id);
-                                setShowPlayModeModal(true);
+                                navigateToCasino();
                               }}
                               className="group w-[30%] min-w-[30%] shrink-0 snap-start sm:w-full sm:min-w-0 aspect-[0.84] rounded-lg overflow-hidden relative border border-white/[0.07] flex flex-col justify-end p-2.5 bg-black hover:border-gold-400/60 hover:scale-[1.025] active:scale-95 duration-300 transform shadow-[0_8px_20px_rgba(0,0,0,0.45)]"
                             >
@@ -1072,7 +1062,7 @@ export default function App() {
                             <button
                               key={slot.id}
                               id={`lobby_slots_${slot.id}`}
-                              onClick={() => navigateToSlots(slot.id)}
+                              onClick={navigateToCasino}
                               className="w-[30%] min-w-[30%] shrink-0 snap-start sm:w-full sm:min-w-0 aspect-[3/4] rounded-2xl overflow-hidden relative border border-white/[0.04] flex flex-col justify-end p-2.5 bg-dark-950 hover:border-gold-600/50 hover:scale-[1.03] active:scale-95 duration-300 transform"
                             >
                               {/* Backdrop game image cover */}
@@ -1142,14 +1132,10 @@ export default function App() {
                           <div className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 pb-1.5 transition-all duration-300 ${isLoadingGames ? 'opacity-40 blur-[2px] pointer-events-none scale-[0.98]' : 'opacity-100 blur-none scale-100'}`}>
                           {providerGames.slice(0, 25).map((game) => {
                             return (
-                              <button
+                              <div
                                 key={game.game_uid}
                                 id={`lobby_provider_${game.game_uid}`}
-                                onClick={() => {
-                                  sound.playClick();
-                                  setView('slots'); // Open generic slots view for now
-                                }}
-                                className="w-full aspect-[3/4] rounded-2xl overflow-hidden relative border border-white/[0.04] flex flex-col justify-end p-2.5 bg-dark-950 hover:border-gold-600/50 hover:scale-[1.03] active:scale-95 duration-300 transform"
+                                className="w-full aspect-[3/4] rounded-2xl overflow-hidden relative border border-white/[0.04] flex flex-col justify-end p-2.5 bg-dark-950"
                               >
                                 {/* Backdrop game image cover */}
                                 <FallbackImage
@@ -1157,7 +1143,7 @@ export default function App() {
                                   alt={game.game_name}
                                   className="absolute inset-0 w-full h-full object-cover opacity-75 group-hover:opacity-100 transition-opacity"
                                 />
-                              </button>
+                              </div>
                             );
                           })}
                           </div>
@@ -1236,10 +1222,9 @@ export default function App() {
 
                   <div className="flex flex-col gap-3.5 flex-1">
                     {SLOT_GAMES.map((slot) => (
-                      <button
+                      <div
                         key={slot.id}
-                        onClick={() => navigateToSlots(slot.id)}
-                        className={`flex gap-3 bg-gradient-to-r ${slot.themeColor} border border-white/5 rounded-2xl p-2.5 text-left transform active:scale-98 transition duration-200 select-none overflow-hidden relative`}
+                        className={`flex gap-3 bg-gradient-to-r ${slot.themeColor} border border-white/5 rounded-2xl p-2.5 text-left select-none overflow-hidden relative`}
                       >
                         {/* Vignetting */}
                         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent z-10" />
@@ -1259,7 +1244,7 @@ export default function App() {
                         <div className="w-8 flex items-center justify-center shrink-0 text-white z-20 font-bold text-xs select-none">
                           {">"}
                         </div>
-                      </button>
+                      </div>
                     ))}
                   </div>
                 </motion.div>
@@ -1296,27 +1281,6 @@ export default function App() {
                     username={user.username}
                     avatarUrl={user.avatarUrl}
                     balance={user.balance}
-                  />
-                </motion.div>
-              )}
-
-              {/* INDIVIDUAL LOADED SLOTS VIEW */}
-              {view === 'slots' && (
-                <motion.div
-                  key="active_slots_screen"
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="h-full"
-                >
-                  <SlotsGame
-                    balance={user.balance}
-                    initialGameId={slotsGameId}
-                    updateBalance={updateBalance}
-                    onBack={() => {
-                      sound.playClick();
-                      setView('home');
-                    }}
                   />
                 </motion.div>
               )}
@@ -1475,7 +1439,7 @@ export default function App() {
           {/* BOTTOM DEVICE NAVIGATION BAR */}
           <div
             id="global_bottom_navbar"
-            className="fixed bottom-0 left-0 right-0 h-[65px] z-30 select-none bg-[#0b111c]/65 backdrop-blur-xl border-t border-white/10 shadow-[0_-8px_24px_rgba(0,0,0,0.22)] lg:hidden flex justify-around items-center"
+            className="fixed bottom-0 left-0 right-0 h-[65px] z-30 select-none bg-[#0b111c]/40 backdrop-blur-2xl backdrop-saturate-150 border-t border-white/10 shadow-[0_-8px_24px_rgba(0,0,0,0.22)] lg:hidden flex justify-around items-center"
           >
             {/* Menu */}
             <button
@@ -1505,11 +1469,11 @@ export default function App() {
               }}
               className="flex-1 h-full flex flex-col items-center justify-center group select-none transition-transform active:scale-95 duration-100 relative"
             >
-              {(view === 'casino' || view === 'slots' || view === 'home' || view === 'crash' || view === 'mines') && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#65e4ed] to-transparent"></div>}
-              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${(view === 'casino' || view === 'slots' || view === 'home' || view === 'crash' || view === 'mines') ? 'text-[#65e4ed]' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
+              {(view === 'casino' || view === 'home' || view === 'crash' || view === 'mines') && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#65e4ed] to-transparent"></div>}
+              <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${(view === 'casino' || view === 'home' || view === 'crash' || view === 'mines') ? 'text-[#65e4ed]' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
                 <Gamepad2 size={20} strokeWidth={2.2} />
               </div>
-              <span className={`text-[9px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${(view === 'casino' || view === 'slots' || view === 'home' || view === 'crash' || view === 'mines') ? 'text-white' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
+              <span className={`text-[9px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${(view === 'casino' || view === 'home' || view === 'crash' || view === 'mines') ? 'text-white' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
                 Casino
               </span>
             </button>
@@ -1524,7 +1488,7 @@ export default function App() {
             >
               {view === 'bets' && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30px] h-[2px] bg-gradient-to-r from-transparent via-[#65e4ed] to-transparent"></div>}
               <div className={`flex items-center justify-center transition-colors duration-200 mb-1 ${view === 'bets' ? 'text-[#65e4ed]' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
-                <Trophy size={20} strokeWidth={2.2} />
+                <ReceiptText size={20} strokeWidth={2.2} />
               </div>
               <span className={`text-[9px] font-sans font-bold tracking-tight leading-none transition-colors duration-200 ${view === 'bets' ? 'text-white' : 'text-[#8392a7] group-hover:text-[#a8bacb]'}`}>
                 Bets
@@ -1590,7 +1554,7 @@ export default function App() {
           setView={setView}
           activeView={view}
           updateBalance={updateBalance}
-          navigateToSlots={navigateToSlots}
+          navigateToCasino={navigateToCasino}
           onOpenRegister={() => setView('register')}
         />
 
@@ -1936,23 +1900,6 @@ export default function App() {
           }}
         />
 
-        <PlayModeModal
-          isOpen={showPlayModeModal}
-          onClose={() => {
-            sound.playClick();
-            setShowPlayModeModal(false);
-            setSelectedFeaturedSlot(null);
-          }}
-          onContinue={(mode) => {
-            sound.playClick();
-            setShowPlayModeModal(false);
-            if (selectedFeaturedSlot) {
-              navigateToSlots(selectedFeaturedSlot);
-              setSelectedFeaturedSlot(null);
-            }
-          }}
-          cashBalance={user.balance}
-        />
       </div>
     </div>
   );

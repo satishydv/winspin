@@ -8,7 +8,7 @@ import {
   Play, Plus, Minus, Settings, Award, User, Wallet, Spade, Dribbble,
   ArrowDownRight, ArrowUpRight, LogOut
 } from 'lucide-react';
-import { BetHistoryItem, UserProfile, GameType, SlotGameId } from '../types';
+import { BetHistoryItem, UserProfile, GameType } from '../types';
 import { SLOT_GAMES } from '../data';
 import { sound } from '../utils/audio';
 
@@ -24,7 +24,7 @@ interface MenuSidebarProps {
   setView: (view: GameType) => void;
   activeView: GameType;
   updateBalance: (amount: number, gameType: any, multiplier: number, outcome: 'win' | 'loss') => void;
-  navigateToSlots: (id: SlotGameId) => void;
+  navigateToCasino: () => void;
   isStatic?: boolean;
   onOpenRegister?: () => void;
 }
@@ -41,7 +41,7 @@ export default function MenuSidebar({
   setView,
   activeView,
   updateBalance,
-  navigateToSlots,
+  navigateToCasino,
   isStatic = false,
   onOpenRegister
 }: MenuSidebarProps) {
@@ -296,11 +296,11 @@ export default function MenuSidebar({
     
     const toast = document.createElement('div');
     toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-gold-500 to-amber-600 border border-gold-300 text-dark-950 px-4 py-2.5 rounded-full font-sans font-bold text-xs shadow-xl z-50 flex items-center gap-2 animate-bounce";
-    toast.innerHTML = `🎲 Random Shuffle Pick: Launching <strong>${chosenGame.title}</strong>!`;
+    toast.innerHTML = `🎲 Random Shuffle Pick: <strong>${chosenGame.title}</strong>!`;
     document.body.appendChild(toast);
     
     setTimeout(() => {
-      navigateToSlots(chosenGame.id);
+      navigateToCasino();
       document.body.removeChild(toast);
     }, 1500);
   };
@@ -431,7 +431,7 @@ export default function MenuSidebar({
                         onClick={() => {
                           sound.playClick();
                           setSearchQuery('');
-                          navigateToSlots(game.id);
+                          navigateToCasino();
                           onClose();
                         }}
                         className="flex gap-2 p-1.5 bg-[#16181c] hover:bg-[#1f2229] border border-white/5 rounded-lg text-left items-center transition"
@@ -1165,7 +1165,7 @@ export default function MenuSidebar({
                           <button
                             onClick={() => {
                               sound.playClick();
-                              navigateToSlots(g.id);
+                              navigateToCasino();
                               setActiveModal(null);
                               onClose();
                             }}
@@ -1217,7 +1217,7 @@ export default function MenuSidebar({
                         <button 
                           onClick={() => {
                             sound.playClick();
-                            navigateToSlots(g.id);
+                            navigateToCasino();
                             setActiveModal(null);
                             onClose();
                           }}
